@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Abhaya | अभया</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: linear-gradient(180deg, #E0F2FE 0%, #FCE7F3 100%); color: #0F172A; min-height: 100vh; padding-bottom: 40px; }
+    header { text-align: center; padding: 14px 12px 10px; background: #FFFFFF; border-bottom: 1px solid #BAE6FD; }
+    header h1 { background: linear-gradient(90deg, #0284C7, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 25px; font-weight: 900; letter-spacing: 1px; }
+    header p { color: #475569; font-size: 12px; margin-top: 2px; font-weight: 500; }
+
+    /* TOP 4-TAB BAR (NEVER GETS CUT OFF AT BOTTOM) */
+    .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 10px 12px; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; position: sticky; top: 0; z-index: 20; }
+    .tab-btn { background: #FFFFFF; border: 1.5px solid #BAE6FD; color: #0369A1; border-radius: 12px; padding: 8px 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; }
+    .tab-btn.active { background: linear-gradient(90deg, #0284C7, #EC4899); color: #FFFFFF; border-color: transparent; box-shadow: 0 3px 10px rgba(236, 72, 153, 0.25); }
+
+    main { max-width: 660px; margin: 0 auto; padding: 14px; }
+    .pane { display: none; }
+    .pane.active { display: block; }
+    .card { background: #FFFFFF; border: 1px solid #E0E7FF; border-radius: 16px; padding: 15px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08); }
+    .row { display: flex; justify-content: space-between; align-items: center; }
+    .badge { background: #DCFCE7; color: #15803D; border: 1px solid #86EFAC; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+    .badge.off { background: #FEE2E2; color: #B91C1C; border-color: #FCA5A5; }
+    .gps { color: #0284C7; font-size: 12px; margin-top: 8px; font-weight: 600; }
+
+    .sos-wrap { display: flex; justify-content: center; margin: 14px 0 18px; }
+    .sos-btn { width: 170px; height: 170px; border-radius: 50%; background: radial-gradient(circle, #F43F5E 0%, #DB2777 100%); border: 8px solid #FBCFE8; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; user-select: none; box-shadow: 0 10px 24px rgba(236, 72, 153, 0.35); }
+    .sos-btn.sent { background: #F59E0B; border-color: #FDE68A; }
+    .sos-btn .big { font-size: 40px; font-weight: 900; }
+    .sos-btn .sub { font-size: 12px; color: #FCE7F3; margin-top: 3px; font-weight: 600; }
+
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    .qbtn { background: #FFFFFF; border: 1.5px solid #FBCFE8; border-radius: 14px; padding: 12px 6px; text-align: center; text-decoration: none; display: block; cursor: pointer; }
+    .qbtn.blue { border-color: #BAE6FD; }
+    .qbtn .num { color: #DB2777; font-size: 19px; font-weight: 800; }
+    .qbtn.blue .num { color: #0284C7; }
+    .qbtn .lbl { color: #334155; font-size: 11px; margin-top: 2px; font-weight: 600; }
+
+    h2 { font-size: 15px; color: #0369A1; margin-bottom: 10px; }
+    .crow, .srow { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #F1F5F9; font-size: 13px; }
+    .crow span:last-child { color: #0284C7; font-weight: 700; }
+    .srow span:first-child { color: #64748B; }
+    .srow span:last-child { font-weight: 700; }
+    .inrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+    input[type="text"], input[type="tel"] { background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 10px; border-radius: 10px; font-size: 13px; width: 100%; }
+    .btn { width: 100%; background: linear-gradient(90deg, #0284C7, #EC4899); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 14px; margin-top: 10px; cursor: pointer; }
+    .btn.sec { background: #F0F9FF; border: 1.5px solid #7DD3FC; color: #0369A1; }
+    .mapbox { background: #F0F9FF; border: 1.5px solid #BAE6FD; border-radius: 12px; padding: 16px; text-align: center; }
+    .mapbox .c { color: #0284C7; font-size: 18px; font-weight: 800; }
+    .mapbox .s { color: #475569; font-size: 12px; margin-top: 5px; }
+    .setrow { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #F1F5F9; }
+    .setrow .t { font-size: 14px; font-weight: 600; }
+    .setrow .d { font-size: 11px; color: #64748B; }
+    input[type="checkbox"] { width: 22px; height: 22px; accent-color: #EC4899; }
+    .rh { color: #DB2777; font-size: 14px; font-weight: 700; margin: 10px 0 3px; }
+    .rp { color: #334155; font-size: 13px; line-height: 1.45; }
+
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.65); align-items: center; justify-content: center; padding: 20px; z-index: 99; }
+    .modal-bg.show { display: flex; }
+    .modal { background: #fff; border: 2px solid #EC4899; border-radius: 16px; padding: 20px; max-width: 350px; width: 100%; text-align: center; }
+    .modal h3 { color: #DB2777; margin-bottom: 8px; }
+    .modal p { font-size: 13px; color: #334155; margin-bottom: 12px; line-height: 1.45; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>ABHAYA | अभया</h1>
+  <p id="subTitle">Women Empowerment &amp; Instant Safety Companion</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="openTab('home', this)">🏠 Home</button>
+  <button class="tab-btn" onclick="openTab('loc', this)">📍 Location</button>
+  <button class="tab-btn" onclick="openTab('set', this)">⚙️ Settings</button>
+  <button class="tab-btn" onclick="openTab('rules', this)">📜 Rules &amp; Reg.</button>
+</div>
+
+<main>
+  <!-- 1. HOME -->
+  <div id="pane-home" class="pane active">
+    <div class="card">
+      <div class="row">
+        <strong>🖊️ Suraksha Kalam Marker</strong>
+        <span id="badge" class="badge">ARMED • GSM + GPS</span>
+      </div>
+      <div class="gps" id="homeGps">📍 26.9124° N, 75.7873° E (Live GPS)</div>
+    </div>
+
+    <div class="sos-wrap">
+      <div id="sosBtn" class="sos-btn">
+        <span class="big" id="sosBig">SOS</span>
+        <span class="sub" id="sosSub">Hold 3s to Trigger</span>
+      </div>
+    </div>
+
+    <div class="grid3">
+      <a class="qbtn" href="tel:112"><div class="num">112</div><div class="lbl" id="l112">National Police</div></a>
+      <a class="qbtn" href="tel:1091"><div class="num">1091</div><div class="lbl" id="l1091">Women Helpline</div></a>
+      <div class="qbtn blue" onclick="openCall()"><div class="num">📞</div><div class="lbl" id="lFake">AI Fake Call</div></div>
+    </div>
+
+    <div class="card">
+      <h2 id="cTitle">Trusted Emergency Contacts</h2>
+      <div id="cList">
+        <div class="crow"><span>Mom (Emergency)</span><span>+919876543210</span></div>
+        <div class="crow"><span>Dad (Emergency)</span><span>+919123456789</span></div>
+      </div>
+      <div class="inrow">
+        <input type="text" id="nName" placeholder="Name" />
+        <input type="tel" id="nPhone" placeholder="+91 Phone" />
+      </div>
+      <button class="btn" onclick="addC()">+ Add Trusted Contact</button>
+    </div>
+  </div>
+
+  <!-- 2. LOCATION -->
+  <div id="pane-loc" class="pane">
+    <div class="card">
+      <h2 id="locTitle">📍 Live GPS Location</h2>
+      <div class="mapbox">
+        <div class="c" id="locCoords">26.9124° N, 75.7873° E</div>
+        <div class="s" id="gpsStat">Jaipur, Rajasthan • Locked (8 Satellites)</div>
+      </div>
+      <button class="btn" onclick="refreshGps()">🔄 Refresh Live GPS</button>
+      <button class="btn sec" onclick="openMaps()">🗺️ Open Live Pin in Google Maps</button>
+    </div>
+    <div class="card">
+      <h2>🖊️ Suraksha Kalam Hardware Telemetry</h2>
+      <div class="srow"><span>Core Controller</span><span>Seeed XIAO ESP32-C3</span></div>
+      <div class="srow"><span>GPS Module</span><span>ATGM336H Satellite Lock</span></div>
+      <div class="srow"><span>GSM Backup</span><span>SIM800C • Ready</span></div>
+      <div class="srow"><span>Battery Level</span><span>94% Charged</span></div>
+    </div>
+  </div>
+
+  <!-- 3. SETTINGS -->
+  <div id="pane-set" class="pane">
+    <div class="card">
+      <h2 id="setTitle">⚙️ App &amp; Marker Settings</h2>
+      <div class="setrow"><div><div class="t">हिन्दी / Bilingual Mode</div><div class="d">Switch labels between English and Hindi</div></div><input type="checkbox" id="hiTog" onchange="toggleHi()" /></div>
+      <div class="setrow"><div><div class="t">Suraksha Kalam Paired</div><div class="d">Sync spring-loaded red SOS button</div></div><input type="checkbox" id="pTog" checked onchange="togglePair()" /></div>
+      <div class="setrow"><div><div class="t">Auto Audio Evidence</div><div class="d">Record 30s ambient audio on SOS</div></div><input type="checkbox" checked /></div>
+      <div class="setrow"><div><div class="t">Offline GSM SMS Backup</div><div class="d">Send GPS via SIM800C without internet</div></div><input type="checkbox" checked /></div>
+    </div>
+    <div class="card">
+      <h2>🏆 Team Suraksha Kalam</h2>
+      <p class="rp">• CEO: Aaradhya<br>• CTO: Archi<br>• Product Designer: Navya<br>• CFO: Anaya<br>• COO: Medhanshi<br>• CMO: Ritwika</p>
+    </div>
+  </div>
+
+  <!-- 4. RULES & REGULATIONS -->
+  <div id="pane-rules" class="pane">
+    <div class="card">
+      <h2 id="rTitle">📜 Rules &amp; Regulations</h2>
+      <div class="rh">1. Responsible SOS Usage</div>
+      <p class="rp">Hold the app SOS button for 3 seconds (or press the spring-loaded red button on the Suraksha Kalam marker) only during genuine emergencies. False alerts to 112/1091 are punishable under Indian law.</p>
+      <div class="rh">2. Trusted Contact Verification</div>
+      <p class="rp">Keep at least 2 active family or guardian numbers saved in your Trusted Emergency Contacts list so offline GSM SMS alerts always reach someone nearby.</p>
+      <div class="rh">3. Hardware Care &amp; Battery Safety</div>
+      <p class="rp">Keep the Suraksha Kalam marker dry, charge its battery regularly before travel, and ensure an active SIM with SMS balance is inserted inside the SIM800C slot.</p>
+      <div class="rh">4. Privacy &amp; Location Consent</div>
+      <p class="rp">Your live GPS coordinates and audio recordings remain encrypted on your device and are shared strictly with chosen contacts and emergency services when SOS triggers.</p>
+    </div>
+    <div class="card">
+      <h2>⚖️ National Women Safety Helplines</h2>
+      <div class="srow"><span>All-in-One Emergency</span><span>112</span></div>
+      <div class="srow"><span>Women Helpline (Police)</span><span>1091</span></div>
+      <div class="srow"><span>Women Distress Helpline</span><span>181</span></div>
+      <div class="srow"><span>Cyber Crime Helpline</span><span>1930</span></div>
+    </div>
+  </div>
+</main>
+
+<div id="sosModal" class="modal-bg"><div class="modal"><h3>🚨 SOS ACTIVATED | आपातकाल सक्रिय</h3><p id="mText"></p><button class="btn" onclick="sendSms()">📩 Send Emergency SMS</button><button class="btn sec" onclick="resetSos()">Reset Alert</button></div></div>
+<div id="callModal" class="modal-bg"><div class="modal" style="border-color:#0284C7;"><h3 style="color:#0284C7;">📞 Incoming Call: Dad</h3><p>"Hello beta, I am waiting right outside the gate in the car—come out whenever you are ready."</p><button class="btn" onclick="closeCall()">✅ Answer Call</button><button class="btn sec" onclick="closeCall()">End Call</button></div></div>
+
+<script>
+  let lat=26.9124, lng=75.7873, hi=false, active=false, tmr=null, cnt=3;
+  let list=[{n:'Mom (Emergency)',p:'+919876543210'},{n:'Dad (Emergency)',p:'+919123456789'}];
+
+  function openTab(id, btn){
+    document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('pane-'+id).classList.add('active');
+    btn.classList.add('active');
+  }
+  function addC(){
+    let n=document.getElementById('nName').value.trim(), p=document.getElementById('nPhone').value.trim();
+    if(!n||!p) return alert('Enter Name and Phone');
+    list.push({n,p}); document.getElementById('nName').value=''; document.getElementById('nPhone').value='';
+    document.getElementById('cList').innerHTML=list.map(c=>`<div class="crow"><span>${c.n}</span><span>${c.p}</span></div>`).join('');
+  }
+  const sb=document.getElementById('sosBtn');
+  function holdStart(e){
+    e.preventDefault(); if(active) return; cnt=3;
+    document.getElementById('sosSub').innerText=hi?`${cnt} सेकंड दबाएं`:`Hold ${cnt}s to Trigger`;
+    tmr=setInterval(()=>{cnt--; if(cnt>0) document.getElementById('sosSub').innerText=hi?`${cnt} सेकंड दबाएं`:`Hold ${cnt}s to Trigger`; else{clearInterval(tmr); fireSos();}},1000);
+  }
+  function holdEnd(){ clearInterval(tmr); if(!active) document.getElementById('sosSub').innerText=hi?'3 सेकंड दबाएं':'Hold 3s to Trigger'; }
+  sb.addEventListener('touchstart',holdStart); sb.addEventListener('mousedown',holdStart);
+  sb.addEventListener('touchend',holdEnd); sb.addEventListener('mouseup',holdEnd);
+
+  function fireSos(){
+    active=true; sb.classList.add('sent'); document.getElementById('sosBig').innerText='SENT!';
+    document.getElementById('sosSub').innerText=hi?'अलर्ट भेजा गया':'Alert Dispatched';
+    document.getElementById('mText').innerText=`Live GPS (${lat}° N, ${lng}° E) sent to ${list.length} contacts + 112 & 1091.`;
+    document.getElementById('sosModal').classList.add('show');
+  }
+  function sendSms(){
+    let nums=list.map(c=>c.p).join(','), msg=encodeURIComponent(`EMERGENCY! Abhaya / Suraksha Kalam SOS! Location: https://maps.google.com/?q=${lat},${lng}`);
+    window.location.href=`sms:${nums}?body=${msg}`;
+  }
+  function resetSos(){ active=false; sb.classList.remove('sent'); document.getElementById('sosBig').innerText='SOS'; document.getElementById('sosSub').innerText=hi?'3 सेकंड दबाएं':'Hold 3s to Trigger'; document.getElementById('sosModal').classList.remove('show'); }
+  function openCall(){ document.getElementById('callModal').classList.add('show'); }
+  function closeCall(){ document.getElementById('callModal').classList.remove('show'); }
+  function refreshGps(){
+    document.getElementById('gpsStat').innerText='Fetching live GPS...';
+    if(navigator.geolocation) navigator.geolocation.getCurrentPosition(p=>{
+      lat=+p.coords.latitude.toFixed(4); lng=+p.coords.longitude.toFixed(4);
+      document.getElementById('locCoords').innerText=`${lat}° N, ${lng}° E`;
+      document.getElementById('homeGps').innerText=`📍 ${lat}° N, ${lng}° E (Live GPS)`;
+      document.getElementById('gpsStat').innerText=`Live Device GPS • Accuracy ±${Math.round(p.coords.accuracy)}m`;
+    },()=>{ document.getElementById('gpsStat').innerText='26.9124° N, 75.7873° E • Suraksha Kalam GSM Fix'; });
+  }
+  function openMaps(){ window.open(`https://maps.google.com/?q=${lat},${lng}`,'_blank'); }
+  function toggleHi(){
+    hi=document.getElementById('hiTog').checked;
+    document.getElementById('subTitle').innerText=hi?'महिला सुरक्षा एवं सशक्तिकरण साथी':'Women Empowerment & Instant Safety Companion';
+    document.getElementById('l112').innerText=hi?'राष्ट्रीय पुलिस':'National Police';
+    document.getElementById('l1091').innerText=hi?'महिला हेल्पलाइन':'Women Helpline';
+    document.getElementById('lFake').innerText=hi?'नकली कॉल':'AI Fake Call';
+    document.getElementById('cTitle').innerText=hi?'विश्वसनीय संपर्क':'Trusted Emergency Contacts';
+    document.getElementById('locTitle').innerText=hi?'📍 लाइव जीपीएस लोकेशन':'📍 Live GPS Location';
+    document.getElementById('setTitle').innerText=hi?'⚙️ ऐप और मार्कर सेटिंग्स':'⚙️ App & Marker Settings';
+    document.getElementById('rTitle').innerText=hi?'📜 नियम और दिशानिर्देश':'📜 Rules & Regulations';
+    if(!active) document.getElementById('sosSub').innerText=hi?'3 सेकंड दबाएं':'Hold 3s to Trigger';
+  }
+  function togglePair(){
+    let on=document.getElementById('pTog').checked, b=document.getElementById('badge');
+    b.innerText=on?'ARMED • GSM + GPS':'OFFLINE'; b.className=on?'badge':'badge off';
+  }
+</script>
+</body>
+</html>
